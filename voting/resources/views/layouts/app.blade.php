@@ -67,7 +67,7 @@
                     ">
                     <div class="text-center px-6 py-2 pt-6">
 
-                        @auth
+                        @auth 
                         <h3 class="font-semibold text-base">Add an idea</h3>
                         <p class="text-xs mt-4">Let us know what you would like and we will take a look over!</p>
                         @else
