@@ -32,11 +32,10 @@ class StatusFilters extends Component
     {
 
         $this->statusCount=Status::getCount();
+        $this->status = request()->status ?? 'All';
         if (Route::currentRouteName()==='idea.show') {
 
             $this->status=null;
-            $this->queryString;
-
             # code...
         }
     }
