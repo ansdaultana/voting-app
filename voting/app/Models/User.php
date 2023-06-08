@@ -43,6 +43,10 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function isAdmin()
+    {
+        return $this->email==="ansdaultana.ad5@gmail.com";
+    }
 
     public function ideas()
     {

@@ -16,11 +16,12 @@ class IdeasIndex extends Component
     public $status;
     public $category;
     public $filter;
-
+public $search;
     protected $queryString = [
         'status',
         'category',
         'filter',
+        'search'
     ];
 
     protected $listeners = ['queryStringUpdatedStatus'];
@@ -36,6 +37,12 @@ class IdeasIndex extends Component
                 return redirect()->route('login');
             }
         }
+    }
+
+    
+    public function updatingSearch()
+    {
+        $this->resetPage();
     }
 
     public function updatingCategory()
@@ -73,7 +80,10 @@ class IdeasIndex extends Component
                         return $query->orderByDesc('votes_count'); // because of   ->withCount('votes')
                     })->when($this->filter && $this->filter === 'My Ideas', function ($query) {
                         return $query->where('user_id', auth()->id());
-        })
+                    })
+                    ->when(strlen( $this->search)>=3, function ($query) {
+                        return $query->where('title', 'like','%'.$this->search.'%');
+                   })
                     //subquery for finding if user has voted for each idea while extracting all ideas
                     ->addSelect([
                         'voted_by_user' => Vote::select('id')
