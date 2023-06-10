@@ -18,8 +18,11 @@ return new class extends Migration
             $table->foreignId("status_id")->constrained();
             $table->string("title");
             $table->text("description");
+            $table->integer("spam_reports")->default(0);
             $table->string("slug")->nullable();
             $table->timestamps();
+
+
         });
     }
 

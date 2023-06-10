@@ -2,14 +2,18 @@
 
 namespace App\Http\Livewire;
 
+use App\Jobs\NotifyAllVoters;
+use App\Mail\IdeaStatusUpdatedMailable;
 use App\Models\Idea;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Symfony\Component\HttpFoundation\Response;
 
 class SetStatus extends Component
-{ public $idea;
+{ 
+    public $idea;
     public $status;
-
+    public $notifyAllUsers;
     public function mount(Idea $idea)
     {
         $this->idea = $idea;
@@ -18,15 +22,21 @@ class SetStatus extends Component
 
     public function setStatus()
     {
-        if (! auth()->check() || ! auth()->user()->isAdmin()) {
+        if ( auth()->guest() || ! auth()->user()->isAdmin()) {
             abort(Response::HTTP_FORBIDDEN);
         }
 
         $this->idea->status_id = $this->status;
         $this->idea->save();
-
-        $this->emit('statusWasUpdated');
+        if ($this->notifyAllUsers) {
+            NotifyAllVoters::dispatch($this->idea);
+        }
+        
+        $this->emit('statusWasUpdated', 'Status was updated successfully!');
     }
+
+   
+
     public function render()
     {
         return view('livewire.set-status');

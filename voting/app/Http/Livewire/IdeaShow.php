@@ -16,7 +16,7 @@ class IdeaShow extends Component
     public $hasVoted;
 
 
-protected $listeners=['statusWasUpdated'];
+    protected $listeners = ['statusWasUpdated', 'ideaWasUpdated', 'ideaWasMarkedAsSpam', 'ideaWasMarkedAsNotSpam'];
 
     public function mount(Idea $idea, $votesCount)
     {
@@ -25,38 +25,50 @@ protected $listeners=['statusWasUpdated'];
         $this->hasVoted = $idea->isVotedByUser(auth()->user());
     }
 
+    public function ideaWasMarkedAsSpam()
+    {
+        $this->idea->refresh();
+    }
 
-public function statusWasUpdated()
-{
-    $this->idea->refresh();
-}
+    public function ideaWasMarkedAsNotSpam()
+    {
+        $this->idea->refresh();
+    }
+    public function statusWasUpdated()
+    {
+        $this->idea->refresh();
+    }
+
+    public function ideaWasUpdated()
+    {
+        $this->idea->refresh();
+    }
 
     public function vote()
     {
         if (!auth()->check()) {
-           return redirect(route('login'));
+            return redirect(route('login'));
             # code...
         }
 
-      
+
         if ($this->hasVoted) {
             # code...
             try {
                 $this->idea->removeVote(auth()->user());
             } catch (VotNotFoundException $e) {
                 // do nothing
-            }          
-              $this->hasVoted=false;
+            }
+            $this->hasVoted = false;
             $this->votesCount--;
 
-        }        
-        else{
+        } else {
             try {
                 $this->idea->vote(auth()->user());
             } catch (DuplicateVoteException $e) {
                 // do nothing
             }
-            $this->hasVoted=true;
+            $this->hasVoted = true;
             $this->votesCount++;
         }
 

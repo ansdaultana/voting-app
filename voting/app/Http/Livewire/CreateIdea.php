@@ -29,8 +29,7 @@ class CreateIdea extends Component
                 'title' => $this->title,
                 'description' => $this->description,
             ]);
-
-            session()->flash("success_message", "Idea was created Successfully!");
+            session()->flash('success_message', 'Idea was added successfully!');
             $this->reset();
             return redirect("/");
         }

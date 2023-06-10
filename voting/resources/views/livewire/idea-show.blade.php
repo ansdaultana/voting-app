@@ -3,7 +3,7 @@
     <div class="idea-container bg-white rounded-xl flex mt-4">
         <div class="flex flex-col md:flex-row flex-1 px-4 py-6">
             <div class="flex-none mx-2">
-                        <a href="#">
+                <a href="#">
                     <img src="{{ $idea->user->getAvatar() }}" alt="avatar"
                         class="w-14 h-14 rounded-xl">
                 </a>
@@ -13,6 +13,13 @@
                     {{ $idea->title }}
                 </h4>
                 <div class="text-gray-600 mt-3">
+                    @admin
+                    <div class="text-red text-semibold mb-2">
+                        @if($idea->spam_reports>0)
+                        Spam Reports: {{$idea->spam_reports}} 
+                        @endif
+                    </div>
+                    @endadmin
                     {{ $idea->description }}
                 </div>
 
@@ -35,26 +42,71 @@
                         <div
                             class="{{ Str::kebab($idea->status->name) }} text-xxs font-bold uppercase leading-none rounded-full text-center w-28 h-7 py-2 px-4">{{
                             $idea->status->name }}</div>
-                        <button
-                            class="relative bg-gray-100 hover:bg-gray-200 border rounded-full h-7 transition duration-150 ease-in py-2 px-3"
-                            @click="isOpen = !isOpen">
-                            <svg fill="currentColor" width="24" height="6"><path
-                                    d="M2.97.061A2.969 2.969 0 000 3.031 2.968 2.968 0 002.97 6a2.97 2.97 0 100-5.94zm9.184 0a2.97 2.97 0 100 5.939 2.97 2.97 0 100-5.939zm8.877 0a2.97 2.97 0 10-.003 5.94A2.97 2.97 0 0021.03.06z"
-                                    style="color: rgba(163, 163, 163, .5)"></svg>
+                        @auth
+                            <div class="relative">
+                            <button
+                                class="relative bg-gray-100 hover:bg-gray-200 border rounded-full h-7 transition duration-150 ease-in py-2 px-3"
+                                @click="isOpen = !isOpen">
+                                <svg fill="currentColor" width="24" height="6"><path
+                                        d="M2.97.061A2.969 2.969 0 000 3.031 2.968 2.968 0 002.97 6a2.97 2.97 0 100-5.94zm9.184 0a2.97 2.97 0 100 5.939 2.97 2.97 0 100-5.939zm8.877 0a2.97 2.97 0 10-.003 5.94A2.97 2.97 0 0021.03.06z"
+                                        style="color: rgba(163, 163, 163, .5)"></svg>
+                                </button>
                                 <ul
                                     class="absolute w-44 text-left font-semibold bg-white shadow-dialog rounded-xl z-10 py-3 md:ml-8 top-8 md:top-6 right-0 md:left-0"
                                     x-cloak
                                     x-show.transition.origin.top.left="isOpen"
                                     @click.away="isOpen = false"
                                     @keydown.escape.window="isOpen = false">
-                                    <li><a href="#"
+                                    @can('update', $idea)
+                                    <li><a
+                                            @click="
+                                    $dispatch('custom-show-edit-modal')
+                                    isOpen=false
+                                    "
+                                            href="#"
+                                            class="hover:bg-gray-100 block transition duration-150 ease-in px-5 py-3">Edit
+                                            Idea</a></li>
+                                    @endcan
+                                    @can('delete', $idea)
+
+                                    <li><a
+                                            @click="
+                                        $dispatch('custom-show-delete-modal')
+                                        isOpen=false
+                                        "
+                                            href="#"
+                                            class="hover:bg-gray-100 block transition duration-150 ease-in px-5 py-3">Delete
+                                            Idea</a></li>
+                                    @endcan
+
+                                    <li><a 
+                                        @click="
+                                        $dispatch('custom-show-mark-idea-as-spam-modal')
+                                        isOpen=false
+                                        "
+                                        href="#"
                                             class="hover:bg-gray-100 block transition duration-150 ease-in px-5 py-3">Mark
                                             as Spam</a></li>
-                                    <li><a href="#"
-                                            class="hover:bg-gray-100 block transition duration-150 ease-in px-5 py-3">Delete
-                                            Post</a></li>
-                                </ul>
-                            </button>
+                                @admin
+                                @if ($idea->spam_reports > 0)
+                                <li>
+                                    <a
+                                        href="#"
+                                        @click.prevent="
+                                            isOpen = false
+                                            $dispatch('custom-show-mark-idea-as-not-spam-modal')
+                                        "
+                                        class="hover:bg-gray-100 block transition duration-150 ease-in px-5 py-3"
+                                    >
+                                        Not Spam
+                                    </a>
+                                </li>
+                                @endif
+                            @endadmin
+                        </ul>
+
+                            </div>
+                            @endauth
                         </div>
 
                         <div class="flex items-center md:hidden mt-4 md:mt-0">
@@ -66,10 +118,10 @@
                                 <div
                                     class="text-xxs font-semibold leading-none text-gray-400">Votes</div>
                             </div>
-                            @if($hasVoted)
+                            @if ($hasVoted)
                             <button
                                 wire:click.prevent="vote"
-                                class="w-20 bg-blue font-semibold uppercase rounded-xl border border-blue hover:bg-blue-hover text-white text-xxs transition duration-150 ease-in px-4 py-3 -mx-5">
+                                class="w-20 bg-blue text-white border border-blue font-bold text-xxs uppercase rounded-xl hover:bg-blue-hover transition duration-150 ease-in px-4 py-3 -mx-5">
                                 Voted
                             </button>
                             @else
@@ -137,33 +189,32 @@
                         </form>
                     </div>
                 </div>
-                @auth   
-                    @if (auth()->user()->isAdmin())
-                     <livewire:set-status :idea="$idea" />
-                    @endif
-                  @endauth
-             
+                @auth
+                @if (auth()->user()->isAdmin())
+                <livewire:set-status :idea="$idea" />
+                @endif
+                @endauth
             </div>
 
             <div class="hidden md:flex items-center space-x-3">
                 <div
                     class="bg-white font-semibold text-center rounded-xl px-3 py-2">
                     <div
-                        class="text-xl leading-snug @if($hasVoted) text-blue @endif ">{{
+                        class="text-xl leading-snug @if($hasVoted) text-blue @endif">{{
                         $votesCount }}</div>
                     <div class="text-gray-400 text-xs leading-none">Votes</div>
                 </div>
-                @if($hasVoted)
+                @if ($hasVoted)
                 <button
-                    wire:click.prevent="vote"
                     type="button"
-                    class="w-32 h-11 text-xs bg-blue font-semibold uppercase rounded-xl border border-blue  hover:bg-blue-hover text-white transition duration-150 ease-in px-6 py-3">
+                    wire:click.prevent="vote"
+                    class="w-32 h-11 text-xs bg-blue text-white font-semibold uppercase rounded-xl border border-blue hover:bg-blue-hover transition duration-150 ease-in px-6 py-3">
                     <span>Voted</span>
                 </button>
                 @else
                 <button
-                    wire:click.prevent="vote"
                     type="button"
+                    wire:click.prevent="vote"
                     class="w-32 h-11 text-xs bg-gray-200 font-semibold uppercase rounded-xl border border-gray-200 hover:border-gray-400 transition duration-150 ease-in px-6 py-3">
                     <span>Vote</span>
                 </button>
