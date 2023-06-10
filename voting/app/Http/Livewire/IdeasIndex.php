@@ -98,6 +98,7 @@ public $search;
                     //which are in votes table
                     //so it will use eloquent relationship automaatically
                     ->withCount('votes')
+                    ->withCount('comments')
                     ->orderBy("created_at", "desc")
                     ->Paginate(Idea::PAGINATE_COUNT),
                 'categories' => $categories

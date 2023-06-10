@@ -2,7 +2,6 @@
     'redirect' => false,
     'messageToDisplay' => '',
 ])
-
 <div
     x-cloak
     x-data="{

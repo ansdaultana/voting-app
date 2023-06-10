@@ -9,12 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 class MarkIdeaAsSpam extends Component
 {
     public $idea;
-
     public function mount(Idea $idea)
     {
         $this->idea = $idea;
     }
-
     public function markAsSpam()
     {
         if (auth()->guest()) {

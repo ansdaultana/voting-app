@@ -47,6 +47,10 @@ class Idea extends Model
     {
         return $this->belongsTo(Status::class);
     }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 
     //the votes of each idea belongs to many users by table called votes
     public function votes()
