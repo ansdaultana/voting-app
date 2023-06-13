@@ -100,7 +100,8 @@ public $search;
                     ->withCount('votes')
                     ->withCount('comments')
                     ->orderBy("created_at", "desc")
-                    ->Paginate(Idea::PAGINATE_COUNT),
+                    ->simplePaginate()
+                    ->withQueryString(),
                 'categories' => $categories
             ]
         );

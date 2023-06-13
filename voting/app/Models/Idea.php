@@ -14,8 +14,7 @@ class Idea extends Model
 {
     use HasFactory;
     use Sluggable;
-    const PAGINATE_COUNT = 10;
-
+    protected $perPage = 10;
     protected $fillable = [
         'title',
         'description',

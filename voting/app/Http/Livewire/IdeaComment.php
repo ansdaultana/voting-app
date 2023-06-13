@@ -8,12 +8,21 @@ use Livewire\Component;
 class IdeaComment extends Component
 {
     public $comment;
+    public $userid;
 
-    public function mount(Comment $comment)
+    protected $listeners = ['commentWasUpdated'];
+
+    public function commentWasUpdated()
     {
-        $this->comment=$comment;
-        
+        $this->comment->refresh();
     }
+
+    public function mount(Comment $comment, $userid)
+    {
+        $this->comment = $comment;
+        $this->userid = $userid;
+    }
+
     public function render()
     {
         return view('livewire.idea-comment');

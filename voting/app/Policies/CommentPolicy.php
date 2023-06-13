@@ -35,9 +35,9 @@ class CommentPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Comment $comment): bool
+    public function update(User $user, Comment $comment)
     {
-        //
+        return $user->id === (int) $comment->user_id;
     }
 
     /**
@@ -45,8 +45,10 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment): bool
     {
-        //
-    }
+     
+   
+        return $user->id === (int) $comment->user_id || $user->isAdmin();
+     }
 
     /**
      * Determine whether the user can restore the model.

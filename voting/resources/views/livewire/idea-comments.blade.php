@@ -7,8 +7,12 @@
                 <livewire:idea-comment
                     :key="$comment->id"
                     :comment="$comment"
+                    :userid="$idea->user->id"
+
                 />
             @endforeach
+
+           
             {{-- <div class="is-admin comment-container relative bg-white rounded-xl flex mt-4">
                 <div class="flex flex-1 px-4 py-6">
                     <div class="flex-none">
@@ -44,6 +48,9 @@
                 </div>
             </div> <!-- end comment-container --> --}}
 
+        </div>
+        <div class="my-8 md:ml-22 ">
+            {{$comments->onEachSide(1)->links()}}
         </div>
     @else
         <div class="mx-auto w-70 mt-12">
