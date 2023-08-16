@@ -14,7 +14,6 @@ class IdeaController extends Controller
     public function index()
     {
 
-
         //each idea will contain an attribut called votes_count
         //
         return view("idea.index");

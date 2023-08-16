@@ -26,7 +26,6 @@ class CommentFactory extends Factory
         ];
     }
 
-
     public function existing()
     {
         return $this->state(function (array $attributes) {

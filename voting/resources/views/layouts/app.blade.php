@@ -58,13 +58,13 @@
             <div class="w-70 mx-auto md:mx-0 md:mr-5">
                 <div
                     class="bg-white md:sticky md:top-8 border-2 border-blue rounded-xl mt-16"
-                    style="
-                          border-image-source: linear-gradient(to bottom, rgba(50, 138, 241, 0.22), rgba(99, 123, 255, 0));
-                            border-image-slice: 1;
-                            background-image: linear-gradient(to bottom, #ffffff, #ffffff), linear-gradient(to bottom, rgba(50, 138, 241, 0.22), rgba(99, 123, 255, 0));
-                            background-origin: border-box;
-                            background-clip: content-box, border-box;
-                    ">
+                        style="
+                            border-image-source: linear-gradient(to bottom, rgba(50, 138, 241, 0.22), rgba(99, 123, 255, 0));
+                                border-image-slice: 1;
+                                background-image: linear-gradient(to bottom, #ffffff, #ffffff), linear-gradient(to bottom, rgba(50, 138, 241, 0.22), rgba(99, 123, 255, 0));
+                                background-origin: border-box;
+                                background-clip: content-box, border-box;
+                        ">
                     <div class="text-center px-6 py-2 pt-6">
 
                         @auth 

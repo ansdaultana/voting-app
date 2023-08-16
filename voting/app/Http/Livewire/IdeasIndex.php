@@ -67,7 +67,6 @@ public $search;
         return view(
             'livewire.ideas-index',
             [
-
                 "ideas" => Idea::with("user", "category", "status")
                     //checking status filters in search query add by statusfilters
                     ->when($this->status && $this->status !== 'All', function ($query) use ($statuses) {
@@ -82,9 +81,15 @@ public $search;
                     })->when($this->filter && $this->filter === 'Spam Ideas', function ($query) {
                         return $query->where('spam_reports','>','0')->orderByDesc('spam_reports'); 
                         
-                    })->when($this->filter && $this->filter === 'My Ideas', function ($query) {
+                    })
+                    ->when($this->filter && $this->filter === 'Spam Comments', function ($query) {
+                        return $query->whereHas('comments', function ($query) {
+                            $query->where('spam_reports', '>', 0);
+                        });
+                    }) ->when($this->filter && $this->filter === 'My Ideas', function ($query) {
                         return $query->where('user_id', auth()->id());
                     })
+                    
                     ->when(strlen( $this->search)>=3, function ($query) {
                         return $query->where('title', 'like','%'.$this->search.'%');
                    })
